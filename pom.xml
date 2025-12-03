@@ -12,6 +12,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <springdoc-version>1.7.0</springdoc-version>
+        <sonar.organization>jorgecarrascof</sonar.organization>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>

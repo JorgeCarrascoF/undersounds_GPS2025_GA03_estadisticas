@@ -1,0 +1,472 @@
+openapi: 3.0.4
+info:
+  title: API de Compras y Estadísticas - OpenAPI 3.0
+  description: |-
+    Microservicio encargado de la gestión de compras y estadísticas de UnderSound.
+    
+  termsOfService: https://swagger.io/terms/f
+  contact:
+    name: Equipo ASEE CG02
+    email: soporte@undersound.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.12
+externalDocs:
+  description: Find out more about Swagger
+  url: https://swagger.io
+  
+servers:
+  - url: https://api.undersound.com/v1
+  - url: http://localhost:8000
+
+  
+tags:
+  - name: Orders
+    description: Purchases and orders
+  - name: Stats
+    description: Manage statistics
+  - name: Recommendations
+    description: Manage recommendations
+
+paths:
+  /orders:
+    get:
+      tags:
+        - Orders
+      summary: Get all orders.
+      responses:
+        '200':
+          description: List of all orders
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '404':
+          description: Orders not found
+          content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Error"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      tags:
+        - Orders
+      summary: Add a new order.
+      requestBody:
+        description: Create a new order
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+        required: true
+      responses:
+        '201':
+          description: Order created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '422':
+          description: Validation exception
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '403':
+          description: Lack of privileges to delete order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '404':
+          description: Order not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+                
+  /orders/user/{id}:
+    get:
+      summary: Obtain user's orders.
+      description: Devuelve una lista de pedidos asociados al usuario que realiza la solicitud.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - Orders
+      responses:
+        '200':
+          description: Lista de pedidos del usuario
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          
+  /orders/{id}:
+    get:
+      summary: Obtain an specific order.
+      description: Devuelve un pedido concreto.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - Orders
+      responses:
+        "200":
+          description: Devuelve el pedido especificado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags:
+        - Orders
+      summary: Delete an order.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string       
+  /stats/artist/{id}:
+    get:
+      tags: [Stats]
+      summary: Obtener artist's stats
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Estadísticas obtenidas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArtistStats"
+  /stats/album/{id}:
+    get:
+      tags: [Stats]
+      summary: Obtain album's stats
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Estadísticas obtenidas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AlbumStats"
+  /stats/merch/{id}:
+    get:
+      tags: [Stats]
+      summary: Obtain merch's stats
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Estadísticas obtenidas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MerchStats"
+  /stats/songs/top:
+    get:
+      tags: [Stats]
+      summary: Get top listened songs
+      description: Returns the most played songs globally.
+      parameters:
+        - name: limit
+          in: query
+          description: Number of songs to return
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: Top listened songs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Song"
+        "400":
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /recommendations/user/{id}:
+    get:
+      tags: [Recommendations]
+      summary: Get album recommendations for a user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Album recommendations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AlbumRef"
+        "400":
+          description: Invalid user ID
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+
+components:
+  schemas:
+    Order:
+      type: object
+      properties:
+        orderId:
+          type: string
+          description: ID de la compra
+          example: "order001"
+        userId:
+          type: string
+          description: ID del usuario que realiza la compra
+          example: "user001"
+        orderDate:
+          type: string
+          format: date-time
+          example: "2025-10-07T20:50:00+02:00"
+        totalAmount:
+          type: number
+          description: Precio total de la compra
+          example: 14.50
+        items:
+          type: array
+          description: Productos comprados
+          items: 
+            $ref: '#/components/schemas/OrderItem'
+    OrderItem:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: ID del producto
+          example: "item001"
+        productName:
+          type: string
+          description: El nombre del producto
+          example: "Camiseta"
+        type:
+          type: string
+          description: El tipo de producto
+          example: "album"
+        quantity:
+          type: integer
+          description: La cantidad de items comprados
+          example: 2
+        unitPrice:
+          type: number
+          description: El precio unitario del item
+          example: 20.00
+    ArtistStats:
+      type: object
+      properties:
+        totalSales:
+          type: integer
+          description: La cantidad de items vendidos (merch y albums)
+          example: 300
+        totalPlays:
+          type: integer
+          description: La cantidad de reproducciones de las canciones
+          example: 1000
+        totalFollowers:
+          type: integer
+          description: La cantidad de seguidores
+          example: 100
+    AlbumStats:
+      type: object
+      properties:
+        albumPlays:
+          type: integer
+          description: La cantidad de escuchas a un album
+          example: 100
+        albumSales:
+          type: integer
+          description: La cantidad de ventas de un album
+          example: 100
+        albumRate:
+          type: number
+          description: La nota de un álbum (escala 0-5).
+          example: 2.8
+    MerchStats:
+      type: object
+      properties:
+        merchSales:
+          type: integer
+          description: La cantidad de ventas de un artículo
+          example: 100
+        merchRate:
+          type: number
+          description: La nota de un artículo (escala 0-5).
+          example: 2.8
+    Song:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string }
+        durationSec: { type: integer }
+        trackNumber: { type: integer }
+        artist: { $ref: '#/components/schemas/ArtistRef' }
+        album: { $ref: '#/components/schemas/AlbumRef' }
+        label: { $ref: '#/components/schemas/LabelRef' }
+        audio:
+          type: object
+          properties:
+            url: { type: string, format: uri }
+            bitrate: { type: integer }
+            codec: { type: string }
+    Album:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string }
+        description: { type: string, nullable: true }
+        releaseDate: { type: string, format: date }
+        releaseState: { type: string, enum: [draft, scheduled, published, archived] }
+        artistId: { type: string, format: uuid }
+        artist: { $ref: '#/components/schemas/ArtistRef' }´
+        labelId: { type: string, format: uuid }
+        label: { $ref: '#/components/schemas/LabelRef' }
+        price: { type: number }
+        currency: { type: string }
+        genres: { type: string }
+        tracks: 
+          type: array
+          items: { $ref: '#/components/schemas/Song' }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+        coverImageUrl: { type: string, format: uri }
+    AlbumRef:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string }
+    LabelRef:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+    ArtistRef:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message        
+        
