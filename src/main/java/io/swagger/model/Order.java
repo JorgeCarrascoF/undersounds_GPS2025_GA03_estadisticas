@@ -5,6 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.model.OrderItem;
 import io.swagger.v3.oas.annotations.media.Schema;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +29,14 @@ import javax.validation.constraints.*;
 @Validated
 @NotUndefined
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-10-23T09:58:42.026149969Z[GMT]")
-
-
+@Entity
+@Table(name = "orders")
 public class Order   {
   @JsonProperty("orderId")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
-  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
+  @JsonSetter(nulls = Nulls.SKIP)    // SKIP setting if the value is null (permite null/vacío)
+  @Id
   private String orderId = null;
 
   @JsonProperty("userId")
@@ -53,6 +59,7 @@ public class Order   {
 
   @JsonProperty("items")
   @Valid
+  @ElementCollection
   private List<OrderItem> items = null;
 
   public Order orderId(String orderId) { 

@@ -5,6 +5,8 @@ import io.swagger.model.ArtistStats;
 import io.swagger.model.Error;
 import io.swagger.model.MerchStats;
 import io.swagger.model.Song;
+import io.swagger.service.StatService;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -46,68 +48,43 @@ public class StatsApiController implements StatsApi {
 
     private final HttpServletRequest request;
 
+    private final StatService statService;
+
     @org.springframework.beans.factory.annotation.Autowired
-    public StatsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+    public StatsApiController(ObjectMapper objectMapper, HttpServletRequest request, StatService statService) {
         this.objectMapper = objectMapper;
         this.request = request;
+        this.statService = statService;
     }
 
-    public ResponseEntity<AlbumStats> statsAlbumIdGet(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("id") String id
-) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<AlbumStats>(objectMapper.readValue("{\n  \"albumRate\" : 2.8,\n  \"albumSales\" : 100,\n  \"albumPlays\" : 100\n}", AlbumStats.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<AlbumStats>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-
-        return new ResponseEntity<AlbumStats>(HttpStatus.NOT_IMPLEMENTED);
+    public ResponseEntity<AlbumStats> statsAlbumIdGet(
+            @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") String id) {
+        return new ResponseEntity<AlbumStats>(statService.getAlbumStats(id), HttpStatus.OK);
     }
 
-    public ResponseEntity<ArtistStats> statsArtistIdGet(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("id") String id
-) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<ArtistStats>(objectMapper.readValue("{\n  \"totalPlays\" : 1000,\n  \"totalSales\" : 300,\n  \"totalFollowers\" : 100\n}", ArtistStats.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<ArtistStats>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-
-        return new ResponseEntity<ArtistStats>(HttpStatus.NOT_IMPLEMENTED);
+    public ResponseEntity<ArtistStats> statsArtistIdGet(
+            @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") String id) {
+        return new ResponseEntity<ArtistStats>(statService.getArtistStats(id), HttpStatus.OK);
     }
 
-    public ResponseEntity<MerchStats> statsMerchIdGet(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("id") String id
-) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<MerchStats>(objectMapper.readValue("{\n  \"merchSales\" : 100,\n  \"merchRate\" : 2.8\n}", MerchStats.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<MerchStats>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-
-        return new ResponseEntity<MerchStats>(HttpStatus.NOT_IMPLEMENTED);
+    public ResponseEntity<MerchStats> statsMerchIdGet(
+            @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") String id) {
+        return new ResponseEntity<MerchStats>(statService.getMerchStats(id), HttpStatus.OK);
     }
 
-    public ResponseEntity<List<Song>> statsSongsTopGet(@Parameter(in = ParameterIn.QUERY, description = "Number of songs to return" ,schema=@Schema( defaultValue="10")) @Valid @RequestParam(value = "limit", required = false, defaultValue="10") Integer limit
-) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<List<Song>>(objectMapper.readValue("[ {\n  \"trackNumber\" : 6,\n  \"artist\" : {\n    \"name\" : \"name\",\n    \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\"\n  },\n  \"album\" : {\n    \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\",\n    \"title\" : \"title\"\n  },\n  \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\",\n  \"label\" : {\n    \"name\" : \"name\",\n    \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\"\n  },\n  \"audio\" : {\n    \"codec\" : \"codec\",\n    \"bitrate\" : 1,\n    \"url\" : \"http://example.com/aeiou\"\n  },\n  \"title\" : \"title\",\n  \"durationSec\" : 0\n}, {\n  \"trackNumber\" : 6,\n  \"artist\" : {\n    \"name\" : \"name\",\n    \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\"\n  },\n  \"album\" : {\n    \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\",\n    \"title\" : \"title\"\n  },\n  \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\",\n  \"label\" : {\n    \"name\" : \"name\",\n    \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\"\n  },\n  \"audio\" : {\n    \"codec\" : \"codec\",\n    \"bitrate\" : 1,\n    \"url\" : \"http://example.com/aeiou\"\n  },\n  \"title\" : \"title\",\n  \"durationSec\" : 0\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<List<Song>>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
+    public ResponseEntity<List<Song>> statsSongsTopGet(
+            @Parameter(in = ParameterIn.QUERY, description = "Number of songs to return", schema = @Schema(defaultValue = "10")) @Valid @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit) {
+        // String accept = request.getHeader("Accept");
+        // if (accept != null && accept.contains("application/json")) {
+        //     try {
+        //         return new ResponseEntity<List<Song>>(objectMapper.readValue(
+        //                 "[ {\n  \"trackNumber\" : 6,\n  \"artist\" : {\n    \"name\" : \"name\",\n    \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\"\n  },\n  \"album\" : {\n    \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\",\n    \"title\" : \"title\"\n  },\n  \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\",\n  \"label\" : {\n    \"name\" : \"name\",\n    \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\"\n  },\n  \"audio\" : {\n    \"codec\" : \"codec\",\n    \"bitrate\" : 1,\n    \"url\" : \"http://example.com/aeiou\"\n  },\n  \"title\" : \"title\",\n  \"durationSec\" : 0\n}, {\n  \"trackNumber\" : 6,\n  \"artist\" : {\n    \"name\" : \"name\",\n    \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\"\n  },\n  \"album\" : {\n    \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\",\n    \"title\" : \"title\"\n  },\n  \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\",\n  \"label\" : {\n    \"name\" : \"name\",\n    \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\"\n  },\n  \"audio\" : {\n    \"codec\" : \"codec\",\n    \"bitrate\" : 1,\n    \"url\" : \"http://example.com/aeiou\"\n  },\n  \"title\" : \"title\",\n  \"durationSec\" : 0\n} ]",
+        //                 List.class), HttpStatus.NOT_IMPLEMENTED);
+        //     } catch (IOException e) {
+        //         log.error("Couldn't serialize response for content type application/json", e);
+        //         return new ResponseEntity<List<Song>>(HttpStatus.INTERNAL_SERVER_ERROR);
+        //     }
+        // }
 
         return new ResponseEntity<List<Song>>(HttpStatus.NOT_IMPLEMENTED);
     }

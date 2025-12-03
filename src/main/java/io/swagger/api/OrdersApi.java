@@ -47,11 +47,11 @@ public interface OrdersApi {
         
         @ApiResponse(responseCode = "404", description = "Order not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
         
-        @ApiResponse(responseCode = "200", description = "Unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))) })
-    @RequestMapping(value = "/orders",
+        @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))) })
+    @RequestMapping(value = "/orders/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
-    ResponseEntity<Order> ordersDelete(@NotNull @Parameter(in = ParameterIn.QUERY, description = "" ,required=true,schema=@Schema()) @Valid @RequestParam(value = "id", required = true) String id
+    ResponseEntity<Order> ordersDelete(@NotNull @Parameter(in = ParameterIn.PATH, description = "" ,required=true,schema=@Schema()) @Valid @PathVariable("id") String id
 );
 
 
@@ -65,7 +65,7 @@ public interface OrdersApi {
     @RequestMapping(value = "/orders",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Order> ordersGet();
+    ResponseEntity<List<Order>> ordersGet();
 
 
     @Operation(summary = "Obtain an specific order.", description = "Devuelve un pedido concreto.", tags={ "Orders" })
