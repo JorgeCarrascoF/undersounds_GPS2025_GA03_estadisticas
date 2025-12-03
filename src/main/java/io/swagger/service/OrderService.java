@@ -5,6 +5,10 @@ import io.swagger.model.MerchItemResponse;
 import io.swagger.model.Order;
 import io.swagger.model.OrderItem;
 import io.swagger.repository.OrderRepository;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +72,8 @@ public class OrderService {
 
   private void decrementMerchItemStock(String merchItemId, Integer quantity) {
     try {
-      String url = servicioContenidoUrl + "/merch/" + merchItemId;
+      String encodedId = URLEncoder.encode(merchItemId, "UTF-8");
+      String url = servicioContenidoUrl + "/merch/" + encodedId;
       MerchItemResponse response = restTemplate.getForObject(
         url,
         MerchItemResponse.class
