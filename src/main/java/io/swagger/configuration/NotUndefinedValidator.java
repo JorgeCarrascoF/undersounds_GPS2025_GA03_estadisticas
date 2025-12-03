@@ -9,6 +9,7 @@ public class NotUndefinedValidator implements ConstraintValidator<NotUndefined, 
 
         @Override
         public void initialize(NotUndefined constraintAnnotation) {
+            // Method undefined by Swagger Codegen
         }
 
         @Override

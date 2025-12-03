@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import io.swagger.model.Album;
-import io.swagger.service.RecommendationService;
 
 @RequestMapping("/recommendations")
 public interface RecommendationsApi {

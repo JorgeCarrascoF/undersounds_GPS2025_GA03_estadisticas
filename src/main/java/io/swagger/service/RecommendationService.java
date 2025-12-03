@@ -7,7 +7,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.ArrayList;
 
 import io.swagger.model.OrderItem;
 import io.swagger.model.Order;
