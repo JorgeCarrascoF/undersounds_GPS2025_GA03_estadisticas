@@ -41,7 +41,7 @@ public class StatService {
   public AlbumStats getAlbumStats(String albumId) {
     AlbumStats stats = new AlbumStats();
     Integer sales = orderRepository.countAlbumSales(albumId);
-    Integer plays = 0; // TODO: coger de servicio de contenido
+    Integer plays = 0;
     BigDecimal rate = BigDecimal.ZERO;
 
     // Obtención del rating de un disco
@@ -64,8 +64,6 @@ public class StatService {
       for (SongResponse song : songs.getData()) {
         if (song.getStats() != null && song.getStats().getPlayCount() != null) {
           plays += song.getStats().getPlayCount();
-        } else {
-          System.out.println("No stats found for song " + song.getId());
         }
       }
     }
@@ -194,11 +192,10 @@ public class StatService {
     try {
       String encodedId = URLEncoder.encode(albumId, "UTF-8");
       String url = contentServiceBaseUrl + "/tracks?albumId=" + encodedId;
-      SongListResponse songListResponse = restTemplate.getForObject(
+      return restTemplate.getForObject(
         url,
         SongListResponse.class
       );
-      return songListResponse;
     } catch (Exception e) {
       e.printStackTrace();
       return null;
