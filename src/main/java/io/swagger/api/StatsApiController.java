@@ -58,18 +58,6 @@ public class StatsApiController implements StatsApi {
 
     public ResponseEntity<List<Song>> statsSongsTopGet(
             @Parameter(in = ParameterIn.QUERY, description = "Number of songs to return", schema = @Schema(defaultValue = "10")) @Valid @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit) {
-        // String accept = request.getHeader("Accept");
-        // if (accept != null && accept.contains("application/json")) {
-        //     try {
-        //         return new ResponseEntity<List<Song>>(objectMapper.readValue(
-        //                 "[ {\n  \"trackNumber\" : 6,\n  \"artist\" : {\n    \"name\" : \"name\",\n    \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\"\n  },\n  \"album\" : {\n    \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\",\n    \"title\" : \"title\"\n  },\n  \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\",\n  \"label\" : {\n    \"name\" : \"name\",\n    \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\"\n  },\n  \"audio\" : {\n    \"codec\" : \"codec\",\n    \"bitrate\" : 1,\n    \"url\" : \"http://example.com/aeiou\"\n  },\n  \"title\" : \"title\",\n  \"durationSec\" : 0\n}, {\n  \"trackNumber\" : 6,\n  \"artist\" : {\n    \"name\" : \"name\",\n    \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\"\n  },\n  \"album\" : {\n    \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\",\n    \"title\" : \"title\"\n  },\n  \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\",\n  \"label\" : {\n    \"name\" : \"name\",\n    \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\"\n  },\n  \"audio\" : {\n    \"codec\" : \"codec\",\n    \"bitrate\" : 1,\n    \"url\" : \"http://example.com/aeiou\"\n  },\n  \"title\" : \"title\",\n  \"durationSec\" : 0\n} ]",
-        //                 List.class), HttpStatus.NOT_IMPLEMENTED);
-        //     } catch (IOException e) {
-        //         log.error("Couldn't serialize response for content type application/json", e);
-        //         return new ResponseEntity<List<Song>>(HttpStatus.INTERNAL_SERVER_ERROR);
-        //     }
-        // }
-
         return new ResponseEntity<List<Song>>(HttpStatus.NOT_IMPLEMENTED);
     }
 

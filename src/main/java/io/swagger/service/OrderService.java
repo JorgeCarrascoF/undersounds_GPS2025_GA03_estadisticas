@@ -1,14 +1,12 @@
 package io.swagger.service;
 
+import io.swagger.exceptions.ResourceNotFoundException;
 import io.swagger.model.MerchItem;
 import io.swagger.model.MerchItemResponse;
 import io.swagger.model.Order;
 import io.swagger.model.OrderItem;
 import io.swagger.repository.OrderRepository;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +63,7 @@ public class OrderService {
 
   public void deleteOrder(String id) {
     if (!orderRepository.existsById(id)) {
-      throw new RuntimeException("Order not found");
+      throw new ResourceNotFoundException("Order not found");
     }
     orderRepository.deleteById(id);
   }
@@ -86,12 +84,7 @@ public class OrderService {
         restTemplate.patchForObject(url, requestBody, Void.class);
       }
     } catch (Exception e) {
-      System.out.println(
-        "Error decrementing stock for merch item " +
-        merchItemId +
-        ": " +
-        e.getMessage()
-      );
+      throw new ResourceNotFoundException("Failed to decrement merch item stock: " + e.getMessage());
     }
   }
 }

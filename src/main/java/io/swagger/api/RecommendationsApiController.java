@@ -1,6 +1,5 @@
 package io.swagger.api;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;

@@ -36,7 +36,7 @@ public class Error   {
    * @return code
    **/
   
-  @Schema(required = true, description = "")
+  @Schema(description = "")
   
   @NotNull
   public String getCode() {  
@@ -61,7 +61,7 @@ public class Error   {
    * @return message
    **/
   
-  @Schema(required = true, description = "")
+  @Schema(description = "")
   
   @NotNull
   public String getMessage() {  
