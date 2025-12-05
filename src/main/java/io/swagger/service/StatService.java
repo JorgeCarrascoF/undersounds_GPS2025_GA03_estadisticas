@@ -14,6 +14,7 @@ import io.swagger.model.SongResponse;
 import io.swagger.repository.OrderRepository;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +28,8 @@ public class StatService {
 
   private final RestTemplate restTemplate;
   private final String contentServiceBaseUrl;
+
+  private final String encoding = "UTF-8";
 
   public StatService(
     OrderRepository orderRepository,
@@ -129,7 +132,7 @@ public class StatService {
 
   private List<Comment> getAlbumComments(String albumId) {
     try {
-      String encodedId = URLEncoder.encode(albumId, "UTF-8");
+      String encodedId = URLEncoder.encode(albumId, encoding);
       String url = contentServiceBaseUrl + "/albums/" + encodedId + "/comments";
       CommentListResponse commentResponse = restTemplate.getForObject(
         url,
@@ -137,14 +140,13 @@ public class StatService {
       );
       return Arrays.asList(commentResponse.getData());
     } catch (Exception e) {
-      e.printStackTrace();
-      return null;
+      return new ArrayList<>();
     }
   }
 
   private List<Comment> getMerchComments(String merchId) {
     try {
-      String encodedId = URLEncoder.encode(merchId, "UTF-8");
+      String encodedId = URLEncoder.encode(merchId, encoding);
 
       String url = contentServiceBaseUrl + "/merch/" + encodedId + "/comments";
       CommentListResponse commentResponse = restTemplate.getForObject(
@@ -153,14 +155,13 @@ public class StatService {
       );
       return Arrays.asList(commentResponse.getData());
     } catch (Exception e) {
-      e.printStackTrace();
-      return null;
+      return new ArrayList<>();
     }
   }
 
   private List<Album> getAlbumsOfUser(String userId) {
     try {
-      String encodedId = URLEncoder.encode(userId, "UTF-8");
+      String encodedId = URLEncoder.encode(userId, encoding);
       String url = contentServiceBaseUrl + "/albums?artistId=" + encodedId;
       AlbumListResponse albumListResponse = restTemplate.getForObject(
         url,
@@ -168,14 +169,13 @@ public class StatService {
       );
       return albumListResponse.getData();
     } catch (Exception e) {
-      e.printStackTrace();
-      return null;
+      return new ArrayList<>();
     }
   }
 
   private List<MerchItem> getMerchOfUser(String userId) {
     try {
-      String encodedId = URLEncoder.encode(userId, "UTF-8");
+      String encodedId = URLEncoder.encode(userId, encoding);
       String url = contentServiceBaseUrl + "/merch?artistId=" + encodedId;
       MerchItemListResponse merchListResponse = restTemplate.getForObject(
         url,
@@ -183,21 +183,16 @@ public class StatService {
       );
       return Arrays.asList(merchListResponse.getData());
     } catch (Exception e) {
-      e.printStackTrace();
-      return null;
+      return new ArrayList<>();
     }
   }
 
   private SongListResponse getSongsOfAlbum(String albumId) {
     try {
-      String encodedId = URLEncoder.encode(albumId, "UTF-8");
+      String encodedId = URLEncoder.encode(albumId, encoding);
       String url = contentServiceBaseUrl + "/tracks?albumId=" + encodedId;
-      return restTemplate.getForObject(
-        url,
-        SongListResponse.class
-      );
+      return restTemplate.getForObject(url, SongListResponse.class);
     } catch (Exception e) {
-      e.printStackTrace();
       return null;
     }
   }
