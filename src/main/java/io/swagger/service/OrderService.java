@@ -84,7 +84,7 @@ public class OrderService {
         restTemplate.patchForObject(url, requestBody, Void.class);
       }
     } catch (Exception e) {
-      throw new RuntimeException("Failed to decrement merch item stock", e);
+      throw new ResourceNotFoundException("Failed to decrement merch item stock: " + e.getMessage());
     }
   }
 }
