@@ -111,13 +111,13 @@ public class CustomInstantDeserializer<T extends Temporal>
       }
   );
 
-  protected final Function<FromIntegerArguments, T> fromMilliseconds;
+  protected final transient Function<FromIntegerArguments, T> fromMilliseconds;
 
-  protected final Function<FromDecimalArguments, T> fromNanoseconds;
+  protected final transient Function<FromDecimalArguments, T> fromNanoseconds;
 
-  protected final Function<TemporalAccessor, T> parsedToValue;
+  protected final transient Function<TemporalAccessor, T> parsedToValue;
 
-  protected final BiFunction<T, ZoneId, T> adjust;
+  protected final transient BiFunction<T, ZoneId, T> adjust;
 
   protected CustomInstantDeserializer(Class<T> supportedType,
                     DateTimeFormatter parser,
@@ -199,6 +199,8 @@ public class CustomInstantDeserializer<T extends Temporal>
         }
         return value;
       }
+      default:
+        break;
     }
     throw context.mappingException("Expected type float, integer, or string.");
   }

@@ -9,6 +9,7 @@ public class NotUndefinedValidator implements ConstraintValidator<NotUndefined, 
 
         @Override
         public void initialize(NotUndefined constraintAnnotation) {
+            // Method undefined by Swagger 
         }
 
         @Override
@@ -27,7 +28,7 @@ public class NotUndefinedValidator implements ConstraintValidator<NotUndefined, 
                             return false;
                         }
                     } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                        return false;
                     }
                 }
             }
